@@ -8,12 +8,20 @@ app = Flask(__name__)  # Создаем экземпляр приложения
 # json.dump("что", "во что") - загрузка в файл
 # json.load("файл") - чтение файла
 def load_messages():  # для чтения файла с сообщениями
-    with open("s_m.json", "r") as file:
-        data = json.load(file)
-    return data["messages"]
+    try:              # тут еще проверим, вдруг файла еще нет
+        with open("s_m.json", "r") as file:
+            data = json.load(file)
+        return data["messages"]
+    except FileNotFoundError:
+        print('Чата еще нет, но мы сделаем!')
+        data = []
+        return data
 
 
-all_messages = load_messages()  # Здесь будем хранить сообщения
+try:
+    all_messages = load_messages()  # Здесь будем хранить сообщения
+except FileNotFoundError:
+    print('Чата еще нет, но мы сделаем!')
 
 
 def add_message(author, text):  # обьявляем функцию,
